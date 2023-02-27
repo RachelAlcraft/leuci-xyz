@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+*.xml
+
+# Don't sync private docs
+instructions/rel_to_pypi.txt
+
