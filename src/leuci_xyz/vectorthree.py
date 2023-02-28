@@ -9,11 +9,24 @@ import math
 # class interface
 
 class VectorThree(object):
-    def __init__(self, a,b,c):    
+    def __init__(self, a=0,b=0,c=0):    
         self.A = a
         self.B = b
         self.C = c        
         self.Valid = True
+
+    def from_coords(self, coords):    
+        coords = coords.strip()
+        if coords[0] == "(":
+            coords = coords[1:]
+        if coords[-1] == ")":
+            coords = coords[:-1]
+        a,b,c = coords.split(",")
+        self.A = float(a)
+        self.B = float(b)
+        self.C = float(c) 
+        self.Valid = True
+        return VectorThree(self.A,self.B,self.C)
                         
     def make_from_key(self,key):                            
         key = key.Substring(1)
@@ -32,7 +45,7 @@ class VectorThree(object):
         else:
             return self.C;
         
-    def put_by_ind(self, idx, val):
+    def put_by_idx(self, idx, val):
         if idx == 0:
             self.A = val
         elif idx == 1:
@@ -68,7 +81,7 @@ class VectorThree(object):
         strkey = "(" + str(round(self.A, rnd)) + ","
         strkey += str(round(self.B, rnd)) + ","  
         strkey += str(round(self.C, rnd)) + ")"  
-        return strKey
+        return strkey
             
     def get_point_pos(self, in_gap, in_width):    
         nums = int(in_width / in_gap)

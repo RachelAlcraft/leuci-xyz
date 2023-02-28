@@ -170,14 +170,14 @@ class SpaceTransform(object):
 
         return pointPrime
 
-    def get_coords(self,unit_coords):
+    def convert_coords(self,unit_coords):
         coords = []
         for i in range(len(unit_coords)):
             row = []
             for j in range(len(unit_coords[0])):
                 vec = v3.VectorThree(unit_coords[i][j][0],unit_coords[i][j][1],0)
                 vec_t = self.apply_transformation(vec)
-                row.append(vec)
+                row.append(vec_t)
             coords.append(row)
         return coords
                         
