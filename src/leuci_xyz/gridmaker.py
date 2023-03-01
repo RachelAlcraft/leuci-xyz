@@ -22,9 +22,8 @@ class GridMaker(object):
                 row.append(((i-offset)*gap,(j-offset)*gap))
             coords.append(row)        
         return coords
+
+    
+    
                         
-
-
-
-        
                         

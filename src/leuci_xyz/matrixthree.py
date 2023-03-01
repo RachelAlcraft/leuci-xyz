@@ -123,4 +123,6 @@ class MatrixThree(object):
         scaled.put_by_idx(1, s1)
         scaled.put_by_idx(2, s2)
         return scaled
+
+    
         
