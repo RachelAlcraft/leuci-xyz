@@ -7,6 +7,9 @@ This class handles transformations in 3d space from a plabe defined by 3 given p
 
 from . import vectorthree as v3
 from . import matrixthree as m3
+#from . import matrixthreex as m3
+#from . import matrixthreey as m3
+
 import math
 
 class CrsTransform(object):
@@ -15,10 +18,10 @@ class CrsTransform(object):
                         axis_sampling,
                         map2crs,
                         cell_dims,
-                        angles):
+                        angles ):
         
         self.M_PI = 3.14159265358979323846
-
+        
         # PUBLIC INTERFACE
         self.dim_order = dim_order
         self.crs_starts = crs_starts
@@ -52,10 +55,10 @@ class CrsTransform(object):
                     startVal = self.crs_starts[1] + CRS.B
                 else:
                     startVal = self.crs_starts[2] + CRS.C
-                vCRS.putByIndex(i, startVal);
-            vCRS.putByIndex(0, vCRS.getByIndex(0) / self.axis_sampling[0])
-            vCRS.putByIndex(1, vCRS.getByIndex(1) / self.axis_sampling[1])
-            vCRS.putByIndex(2, vCRS.getByIndex(2) / self.axis_sampling[2])
+                vCRS.put_by_idx(i, startVal);
+            vCRS.put_by_idx(0, vCRS.get_by_idx(0) / self.axis_sampling[0])
+            vCRS.put_by_idx(1, vCRS.get_by_idx(1) / self.axis_sampling[1])
+            vCRS.put_by_idx(2, vCRS.get_by_idx(2) / self.axis_sampling[2])
             vXYZ = self.orthoMat.multiply(vCRS, False)        
         return vXYZ
         
@@ -68,7 +71,7 @@ class CrsTransform(object):
                 startVal /= self.cell_dims[i] / self.axis_sampling[i]                
                 vCRS.put_by_idx(i, startVal)        
         else: #they are not orthogonal        
-            vFraction = self.deOrthoMat.multiply(XYZ, True)
+            vFraction = self.deOrthoMat.multiply(XYZ, False)
             for i in range(3):            
                 val = vFraction.get_by_idx(i) * self.axis_sampling[i] - self.crs_starts[self.map2xyz[i]];
                 vCRS.put_by_idx(i, val);                    
@@ -115,16 +118,18 @@ class CrsTransform(object):
         v21 = 0
         v22 = self.cell_dims[2] * temp / math.sin(gamma)
 
-        self.orthoMat = m3.MatrixThree()
-        self.orthoMat.put_value(v00, 0, 0)
-        self.orthoMat.put_value(v01, 0, 1)
-        self.orthoMat.put_value(v02, 0, 2)
-        self.orthoMat.put_value(v10, 1, 0)
-        self.orthoMat.put_value(v11, 1, 1)
-        self.orthoMat.put_value(v12, 1, 2)
-        self.orthoMat.put_value(v20, 2, 0)
-        self.orthoMat.put_value(v21, 2, 1)
-        self.orthoMat.put_value(v22, 2, 2)        
+        self.orthoMat = m3.MatrixThree([v00,v01,v02,v10,v11,v12,v20,v21,v22])
+        #self.orthoMat = m3.MatrixThree([v00,v10,v20,v01,v11,v21,v02,v12,v22])
+        #self.orthoMat = m3.MatrixThree()
+        #self.orthoMat.put_value(v00, 0, 0)
+        #self.orthoMat.put_value(v01, 0, 1)
+        #self.orthoMat.put_value(v02, 0, 2)
+        #self.orthoMat.put_value(v10, 1, 0)
+        #self.orthoMat.put_value(v11, 1, 1)
+        #self.orthoMat.put_value(v12, 1, 2)
+        #self.orthoMat.put_value(v20, 2, 0)
+        #self.orthoMat.put_value(v21, 2, 1)
+        #self.orthoMat.put_value(v22, 2, 2)        
         self.deOrthoMat = self.orthoMat.get_inverse()
 
     def _make_origin(self):        
@@ -141,7 +146,8 @@ class CrsTransform(object):
         oro.put_by_idx(0, oro.get_by_idx(0) / self.axis_sampling[0])
         oro.put_by_idx(1, oro.get_by_idx(1) / self.axis_sampling[1])
         oro.put_by_idx(2, oro.get_by_idx(2) / self.axis_sampling[2])
-        self.origin = self.orthoMat.multiply(oro, True)
+        #self.origin = self.orthoMat.multiply(oro, True)
+        self.origin = self.orthoMat.multiply(oro, False)
         
     def _create_transformation(self):        
         self._make_ortho()

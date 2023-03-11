@@ -16,13 +16,13 @@ import leuci_xyz.spacetransform as sptr
 import leuci_xyz.crstransform as crs
 
 ########## INPUTS #################
-# for 6eex
-dim_order = [53,36,87]
-crs_starts = [-1,-9,-14]
-axis_sampling = [24,36,64]
-cell_dims = [9.21,11.98,22.8]
-angles = [90,90,90]
-map2crs = [1,0,2]
+# for 3u7z
+dim_order = [110,70,70]
+crs_starts = [0,0,0]
+axis_sampling = [70,70,110]
+cell_dims = [29.685,30.474,47.156]
+angles = [73.13,83.8,89.3]
+map2crs = [2,0,1]
 
 ########## EXAMPLE #################
 def tranform_and_back():
@@ -34,7 +34,7 @@ def tranform_and_back():
         map2crs, #map axes
         cell_dims,#lengths
         angles  )    #nagles
-    xyz_vec = v3.VectorThree(1,2,3)
+    xyz_vec = v3.VectorThree(abc=[17.691,47.462,-2.114])
     crs_vec = crs_space.xyz_to_crs(xyz_vec)
     back_vec = crs_space.crs_to_xyz(crs_vec)    
     

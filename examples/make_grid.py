@@ -25,7 +25,8 @@ def make_grid(central, linear, planar):
     st = sptr.SpaceTransform(central, linear, planar, log=True)
     gm = grid.GridMaker()
     u_coords = gm.get_unit_grid(5,6)
-    xyz_coords = st.get_coords(u_coords)
+    xyz_coords = st.convert_coords(u_coords)
+    print(xyz_coords[0][0].get_key())
     
     
 

@@ -5,15 +5,27 @@ This class handles 3d vectors
 """
 
 import math
+import numpy as np
 
 # class interface
 
 class VectorThree(object):
-    def __init__(self, a=0,b=0,c=0):    
-        self.A = a
-        self.B = b
-        self.C = c        
-        self.Valid = True
+    def __init__(self, a=0.,b=0.,c=0.,abc=[0.,0.,0.]):    
+        if a != 0 or b != 0 or c!=0:
+            self.A = a
+            self.B = b
+            self.C = c        
+            self.Valid = True
+            self.npy = np.zeros((3))
+            self.npy[0] = a
+            self.npy[1] = b
+            self.npy[2] = c
+        else:
+            self.npy = np.array(abc)        
+            self.A = self.npy[0]
+            self.B = self.npy[1]
+            self.C = self.npy[2]
+
 
     def from_coords(self, coords):    
         coords = coords.strip()
@@ -26,7 +38,8 @@ class VectorThree(object):
         self.B = float(b)
         self.C = float(c) 
         self.Valid = True
-        return VectorThree(self.A,self.B,self.C)
+        self.npy = np.array([self.A,self.B,self.C])
+        return VectorThree(abc=self.npy.tolist())
                         
     def make_from_key(self,key):                            
         key = key.Substring(1)
@@ -35,19 +48,22 @@ class VectorThree(object):
         self.A = float(sk[0])
         self.B = float(sk[1])
         self.C = float(sk[2])        
+        self.npy = np.array([self.A,self.B,self.C])
         self.Valid = True
         
-    def get_by_idx(self,idx):        
-        if idx == 0:
-            return self.A;
-        elif idx == 1:
-            return self.B;
-        else:
-            return self.C;
+    def get_by_idx(self,idx):    
+        return  self.npy[idx]   
+        #if idx == 0:
+        #    return self.A;
+        #elif idx == 1:
+        #    return self.B;
+        #else:
+        #    return self.C;
         
     def put_by_idx(self, idx, val):
+        self.npy[idx] = val
         if idx == 0:
-            self.A = val
+            self.A = val            
         elif idx == 1:
             self.B = val
         else:
@@ -83,17 +99,15 @@ class VectorThree(object):
         strkey += str(round(self.C, rnd)) + ")"  
         return strkey
             
-    def get_point_pos(self, in_gap, in_width):    
-        nums = int(in_width / in_gap)
-        real_gap = in_width/nums
-        real_width = real_gap * nums        
+    def get_point_pos(self, samples, width):    
+        gap = width/(samples-1)                        
         PP = VectorThree(self.A, self.B, self.C)        
-        PP.A = PP.A / real_gap
-        PP.B = PP.B / real_gap
-        PP.C = PP.C / real_gap
-        adj = (real_width / (2 * real_gap))
-        if (int)(nums % 2) != 0:
-            adj -= 0.5
+        PP.A = PP.A / gap
+        PP.B = PP.B / gap
+        PP.C = PP.C / gap
+        adj = (width / (2 * gap))
+        #if (int)(samples % 2) != 0:
+        #    adj -= 0.5
         PP.A += adj
         PP.B += adj                
         return PP
