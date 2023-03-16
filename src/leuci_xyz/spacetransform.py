@@ -258,5 +258,46 @@ class SpaceTransform(object):
         else:        
             return v3.VectorThree(x, y, 0)
     
-        return [[v3.VectorThree(0,0,0),v3.VectorThree(0,0,0)],[v3.VectorThree(0,0,0),v3.VectorThree(0,1,0)]]
+    def navigate(self, point, nav, nav_distance):
+        angle = 2 * self.M_PI / 90
+        point = self.reverse_transformation(point)
+        if (nav == "DN"):#'DN'down
+            point.A += nav_distance        
+        elif (nav == "UP"):#'UP'up
+            point.A -= nav_distance        
+        elif (nav == "LE"):#'LE'left
+            point.B += nav_distance        
+        elif (nav == "RI"):#'RI'right
+            point.B -= nav_distance        
+        elif (nav == "FW"):#'FW'fwd
+            point.C -= nav_distance        
+        elif (nav == "BA"):#'BA'back
+            point.C += nav_distance        
+        elif (nav == "TL"):#'TL'tilt left       
+            ll = self.rotate(point.B, point.C, angle)
+            point.B = ll.A
+            point.C = ll.B
+        elif (nav == "TR"):#'TR'tilt right
+            ll = self.rotate(point.B, point.C, -1 * angle)
+            point.B = ll.A
+            point.C = ll.B        
+        elif (nav == "TO"):#'TO'tilt over
+            ll = self.rotate(point.A, point.C, angle)
+            point.A = ll.A
+            point.C = ll.B        
+        elif (nav == "TU"):#'TU'tilt under
+            ll = self.rotate(point.A, point.C, -1 * angle)
+            point.A = ll.A
+            point.C = ll.B                                
+        elif (nav == "CL"):#'CL'clockwise
+            ll = self.rotate(point.A, point.B, angle)
+            point.A = ll.A
+            point.B = ll.B        
+        elif (nav == "AC"):#'AC'anti-clockwise
+            ll = self.rotate(point.A, point.B, -1 * angle)
+            point.A = ll.A
+            point.B = ll.B        
+        point = self.apply_transformation(point)
+        return point
+        
                         

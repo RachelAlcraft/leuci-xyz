@@ -105,7 +105,7 @@ class VectorThree(object):
         PP.A = PP.A / gap
         PP.B = PP.B / gap
         PP.C = PP.C / gap
-        adj = (width / (2 * gap))
+        adj = (samples-1)/2#(width / (2 * gap))
         #if (int)(samples % 2) != 0:
         #    adj -= 0.5
         PP.A += adj

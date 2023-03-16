@@ -18,7 +18,7 @@ centralstr = "(1.1,2, 3)"
 linearstr = "( 2,-2.22,2)"
 planarstr = "(3 ,2 ,3) "
 width=100
-samples=4
+samples=5
 
 ########## EXAMPLE #################
 def make_coords():    
@@ -38,6 +38,11 @@ def make_coords():
     print(centralstr,posCp.get_key())
     print(linearstr,posLp.get_key())
     print(planarstr,posPp.get_key())
+
+    pos_moved = st.navigate(central,"UP",0.01)
+    print("Moved from",central.get_key())
+    print("Moved to",pos_moved.get_key())
+    
 
 
     
