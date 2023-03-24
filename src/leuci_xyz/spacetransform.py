@@ -290,11 +290,11 @@ class SpaceTransform(object):
             point.A = ll.A
             point.C = ll.B                                
         elif (nav == "CL"):#'CL'clockwise
-            ll = self.rotate(point.A, point.B, angle)
+            ll = self.rotate(point.A, point.B, -1*angle)
             point.A = ll.A
             point.B = ll.B        
         elif (nav == "AC"):#'AC'anti-clockwise
-            ll = self.rotate(point.A, point.B, -1 * angle)
+            ll = self.rotate(point.A, point.B, angle)
             point.A = ll.A
             point.B = ll.B        
         point = self.apply_transformation(point)
