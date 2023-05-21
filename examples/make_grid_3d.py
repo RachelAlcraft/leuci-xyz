@@ -24,8 +24,10 @@ def make_grid(central, linear, planar):
     # Test SpaceTransform goes back and forth
     st = sptr.SpaceTransform(central, linear, planar, log=True)
     gm = grid.GridMaker()
-    u_coords = gm.get_unit_grid(5,6)
+    u_coords = gm.get_unit_grid(5,2,depth_samples=3)
+    u_coords.print()
     xyz_coords = st.convert_coords(u_coords)
+    
     print(xyz_coords.get(0,0).get_key())
     
     

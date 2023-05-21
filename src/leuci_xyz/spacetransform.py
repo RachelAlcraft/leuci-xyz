@@ -7,6 +7,7 @@ This class handles transformations in 3d space from a plabe defined by 3 given p
 
 import math
 from . import vectorthree as v3
+from . import matrix3d as d3
 
 class SpaceTransform(object):
     def __init__(self, central, linear, planar, log=False):
@@ -172,14 +173,32 @@ class SpaceTransform(object):
 
     def convert_coords(self,unit_coords):
         coords = []
-        for i in range(len(unit_coords)):
-            row = []
-            for j in range(len(unit_coords[0])):
-                vec = v3.VectorThree(unit_coords[i][j][0],unit_coords[i][j][1],0)
-                vec_t = self.apply_transformation(vec)
-                row.append(vec_t)
-            coords.append(row)
-        return coords
+        # 2d or 3d?
+        if type(unit_coords) is d3.Matrix3d:
+            return self.convert_coords3d(unit_coords)
+        else:
+            a,b = unit_coords.shape()
+            mat2 = d3.Matrix3d(a,b)            
+            for i in range(a):                
+                for j in range(b):
+                    vec = v3.VectorThree(unit_coords.get(i,j)[0],unit_coords.get(i,j)[1],0)
+                    vec_t = self.apply_transformation(vec)                                    
+                    mat2.add(i,j,vec_t)
+            return mat2
+    
+    def convert_coords3d(self,unit_coords):        
+        a,b,c = unit_coords.shape()
+        mat3 = d3.Matrix3d(a,b,c)
+        for i in range(a):            
+            for j in range(b):                
+                for k in range(c):
+                    x = unit_coords.get(i,j,k=k)[0]
+                    y = unit_coords.get(i,j,k=k)[1]
+                    z = unit_coords.get(i,j,k=k)[2]
+                    vec = v3.VectorThree(x,y,z)
+                    vec_t = self.apply_transformation(vec)
+                    mat3.add(i,j,k,vec_t)                            
+        return mat3
                         
 ##### INTERNAL FUNCTIONS ###
     def _get_quadrant(self,x, y):                           
@@ -290,11 +309,11 @@ class SpaceTransform(object):
             point.A = ll.A
             point.C = ll.B                                
         elif (nav == "CL"):#'CL'clockwise
-            ll = self.rotate(point.A, point.B, -1*angle)
+            ll = self.rotate(point.A, point.B, angle)
             point.A = ll.A
             point.B = ll.B        
         elif (nav == "AC"):#'AC'anti-clockwise
-            ll = self.rotate(point.A, point.B, angle)
+            ll = self.rotate(point.A, point.B, -1*angle)
             point.A = ll.A
             point.B = ll.B        
         point = self.apply_transformation(point)

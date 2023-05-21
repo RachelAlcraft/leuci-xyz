@@ -7,8 +7,7 @@ This class handles transformations in 3d space from a plabe defined by 3 given p
 
 from . import vectorthree as v3
 from . import matrixthree as m3
-#from . import matrixthreex as m3
-#from . import matrixthreey as m3
+from . import matrix3d as d3
 
 import math
 
@@ -92,15 +91,15 @@ class CrsTransform(object):
         return coords
     
     def convert_coords_to_crs(self,xyz_coords):
-        coords = []
-        for i in range(len(xyz_coords)):
-            row = []
-            for j in range(len(xyz_coords[0])):
-                vec = xyz_coords[i][j]
-                vec_t = self.xyz_to_crs(vec)
-                row.append(vec_t)
-            coords.append(row)
-        return coords
+        a,b,c = xyz_coords.shape()
+        m3 = d3.Matrix3d(a,b,c)        
+        for i in range(a):
+            for j in range(b):
+                for k in range(c):                        
+                    vec = xyz_coords.get(i,j,k=k)
+                    vec_t = self.xyz_to_crs(vec)
+                    m3.add(i,j,k=k,data=vec_t)            
+        return m3
 
     ########## PRIVATE INTERFACE #############
     def _make_ortho(self):        

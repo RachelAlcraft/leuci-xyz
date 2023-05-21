@@ -14,6 +14,7 @@ from pathlib import Path
 import leuci_xyz.vectorthree as v3
 import leuci_xyz.spacetransform as sptr
 import leuci_xyz.crstransform as crs
+import leuci_xyz.gridmaker as grid
 
 ########## INPUTS #################
 # for 6eex
@@ -49,6 +50,15 @@ def tranform_and_back():
     print("From crs", crs_vec.get_key(rnd=2))
     print("To xyz", xyz_vec.get_key(rnd=2))
     print("Back crs", back_vec.get_key(rnd=2))
+
+    gm = grid.GridMaker()
+    u_coords = gm.get_unit_grid(5,6,2)
+    spc = sptr.SpaceTransform(v3.VectorThree(1,2,3), v3.VectorThree(1,0,3), v3.VectorThree(1,2,0))
+    xyz_coords = spc.convert_coords(u_coords)        
+    crs_coords = crs_space.convert_coords_to_crs(xyz_coords)
+    crs_coords.print()
+
+
     
     
 ########################################################################            
