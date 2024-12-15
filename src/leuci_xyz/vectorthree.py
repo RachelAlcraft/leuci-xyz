@@ -27,6 +27,8 @@ class VectorThree(object):
             self.C = self.npy[2]
 
 
+
+    
     def from_coords(self, coords):    
         coords = coords.strip()
         if coords[0] == "(":
